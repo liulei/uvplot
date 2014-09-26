@@ -2,19 +2,30 @@ function uvplot()
 % plot (l,m) figure
 %
 
+ng = 512;
+
+target = 'ein';
+uvname = strcat(target, '.uv');
+pngname = strcat(target, '_dirt_', num2str(ng), '.png');
+
 offset = 3;
 
-arr = importdata('out.dat');
-u = vertcat(arr(:, 1), -arr(:, 1));
-v = vertcat(arr(:, 2), -arr(:, 2));
+arr = importdata(uvname);
 
-tmp = complex(arr(:, offset + 1), arr(:, offset + 2));
-vis = vertcat(tmp, conj(tmp));
-weight = vertcat(arr(:, offset + 3), arr(:, offset + 3));
+u = arr(:, 1);
+v = arr(:, 2);
+vis = complex(arr(:, offset + 1), arr(:, offset + 2));
+weight = arr(:, offset + 3);
+
+%u = vertcat(arr(:, 1), -arr(:, 1));
+%v = vertcat(arr(:, 2), -arr(:, 2));
+%tmp = complex(arr(:, offset + 1), arr(:, offset + 2));
+%vis = vertcat(tmp, conj(tmp));
+%weight = vertcat(arr(:, offset + 3), arr(:, offset + 3));
 
 mu = max(u);
 mv = max(v);
-maxuv = max(mu, mv) * 1.05;
+maxuv = max(mu, mv) * 1.00001;
 
 fsize = 17;
 figure(1);
@@ -28,9 +39,9 @@ axis square;
 xlabel('u');
 ylabel('v');
 
-ng = 256;
-uleft = -maxuv * 2;
-vleft = -maxuv * 2;
+
+uleft = -maxuv ;
+vleft = -maxuv ;
 uright = -uleft;
 vright = -vleft;
 du = (uright - uleft) / ng;
@@ -62,14 +73,17 @@ imagesc(abs(beamarr));
 colormap(jet);
 colorbar();
 
-dirt_img = fftshift(fft2(visarr));
-beam_img = fftshift(fft2(beamarr));
+dirt_img = fft2(visarr);
+beam_img = fft2(beamarr);
+
+dirt_img = fftshift(dirt_img);
+beam_img = fftshift(beam_img);
 
 figure(4);
 imagesc(abs(dirt_img));
 colormap(gray);
 colorbar();
-print(gcf, '-dpng', 'dirt.png');
+print(gcf, '-dpng', pngname);
 
 figure(5);
 imagesc(abs(beam_img));
