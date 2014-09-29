@@ -21,7 +21,7 @@ mu = max(u);
 mv = max(v);
 maxuv = max(mu, mv) * 1.00001;
 
-maxuv = maxuv * 4.6;
+maxuv = maxuv * 8;
 
 fsize = 17;
 figure(1);
@@ -105,12 +105,14 @@ colorbar();
 
 res = real(dirt_img);
 beam = real(dirt_beam);
-[bmax, by, bx] = arr_max(beam);
+[bmax, by, bx] = arr_max(beam)
 beam = beam / bmax;
 
-gain = 0.001;
+%beam(by - 5: by + 5, bx - 5: bx + 5)
 
-niter = 1700;
+gain = 0.01;
+
+niter = 2000;
 flux = zeros(niter);
 ary = zeros(niter, 'int32');
 arx = zeros(niter, 'int32');
@@ -125,14 +127,14 @@ for i = 1:niter
     %[minval, row, col] = arr_min(dirt_img)
     
     rmv = gain * maxflux * beam;
-    bry = by - ry;
-    brx = bx - rx;
+    rby = ry - by;
+    rbx = rx - bx;
     
     for bj = 1:ng
         for bi = 1:ng
-             rj = bj + bry;
-             ri = bi + brx;
-             if rj > 0 & rj <= ng & ri > 0 & ri <= ng
+             rj = bj + rby;
+             ri = bi + rbx;
+             if rj > 0 && rj <= ng && ri > 0 && ri <= ng
                  res(rj, ri) = res(rj, ri) - rmv(bj, bi);
              end %if
         end % bi
@@ -143,7 +145,7 @@ for i = 1:niter
     arx(i) = rx;
     
     sum = sum + flux(i);
-    if mod(i, 50) == 0
+    if mod(i, 10) == 0
         [maxflux, ry, rx] = arr_max(res);
         [minflux, ry, rx] = arr_min(res);
         fprintf('Iteration %5d, flux cleaned: %.4f, %.4f --- %.4f\n', i, sum, minflux, maxflux);
@@ -155,46 +157,46 @@ for i = 1:niter
     end
 end
     
-bw = 0.46;
+bw = 0.26;
 pw = 0.1;
 
 img = zeros(ng, ng);
-irmax = 2 * ceil(bw / pix);
+irmax = 2 * ceil(bw / pw);
 
+%irmax = 1;
 gauss = zeros(irmax * 2 + 1, irmax * 2 + 1);
 for j = -irmax:irmax
     for i = -irmax:irmax
         rx = i * pw;
         ry = j * pw;
         tmp = (rx / bw)^2 + (ry / bw)^2;
-        gauss(j + irmax + 1, i + irmax + 1) = exp(-())
-
-for i = 1:length(flux)
-    
-    y0 = ary(i) - irmax;
-    if y0 < 1
-        y0 = 1;
+        gauss(j + irmax + 1, i + irmax + 1) = exp(-tmp);
     end
-    y1 = ary(i) + irmax;
-    if y1 > ng
-        y1 = ng;
-    end
-    
-    x0 = arx(i) - irmax;
-    if x0 < 1
-        x0 = 1;
-    end
-    x1 = arx(i) + irmax;
-    if x1 > ng
-        x1 = ng;
-    end
-    
-    for j = y0:y1
-        for i = x0:x1
-            
-
 end
 
+for i = 1:length(flux)    
+    for gj = -irmax:irmax
+        for gi = -irmax:irmax
+            imgi = gi + arx(i);
+            imgj = gj + ary(i);
+            if imgi > 1 && imgi <= ng && imgj > 1 && imgj <= ng
+                img(imgj, imgi) = img(imgj, imgi) + flux(i) * gauss(gj + irmax + 1, gi + irmax + 1);
+            end
+        end
+    end
+end
+
+figure(7);
+imagesc(img);
+axis image;
+colormap(gray);
+colorbar();
+
+figure(8);
+contour(img);
+axis square;
+
+end
 
 function [maxval, row, col] = arr_max(arr)
     [maxval, maxloc] = max(arr(:));
