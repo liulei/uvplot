@@ -1,0 +1,99 @@
+Number of keys: 1025
+SIMPLE  =                    T /
+BITPIX  =                  -32 /
+NAXIS   =                    7 /
+NAXIS1  =                    0 /No standard image just group
+NAXIS2  =                    3 /
+NAXIS3  =                    1 /
+NAXIS4  =                    1 /
+NAXIS5  =                    4 /
+NAXIS6  =                    1 /
+NAXIS7  =                    1 /
+EXTEND  =                    T /This is the antenna file
+BLOCKED =                    T /Tape may be blocked
+OBJECT  = 'DA193   '           /Source name
+TELESCOP= 'VLBA    '           /
+INSTRUME= 'VLBA    '           /
+OBSERVER= 'BK084   '           /
+DATE-OBS= '2001-08-17'         /Obs start date YYYY-MM-DD
+DATE-MAP= '2006-09-11'         /Last processing date YYYY-MM-DD
+BSCALE  =    1.00000000000E+00 /REAL = TAPE * BSCALE + BZERO
+BZERO   =    0.00000000000E+00 /
+BUNIT   = 'UNCALIB '           /Units of flux
+EPOCH   =      2.000000000E+03 /Epoch of RA DEC
+VELREF  =                    3 />256 RADIO, 1 LSR 2 HEL 3 OBS
+OBSRA   =    8.88783567042E+01 /Antenna pointing RA
+OBSDEC  =    3.98136569444E+01 /Antenna pointing DEC
+CTYPE2  = 'COMPLEX '           /1=real,2=imag,3=weight
+CRVAL2  =    1.00000000000E+00 /
+CDELT2  =      1.000000000E+00 /
+CRPIX2  =      1.000000000E+00 /
+CROTA2  =      0.000000000E+00 /
+CTYPE3  = 'STOKES  '           /-1=RR, -2=LL, -3=RL, -4=LR
+CRVAL3  =   -2.00000000000E+00 /
+CDELT3  =     -1.000000000E+00 /
+CRPIX3  =      1.000000000E+00 /
+CROTA3  =      0.000000000E+00 /
+CTYPE4  = 'FREQ    '           /Frequency in Hz.
+CRVAL4  =    1.53519843750E+10 /
+CDELT4  =      8.000000000E+06 /
+CRPIX4  =      1.000000000E+00 /
+CROTA4  =      0.000000000E+00 /
+CTYPE5  = 'IF      '           /Freq. group no. in CH table
+CRVAL5  =    1.00000000000E+00 /
+CDELT5  =      1.000000000E+00 /
+CRPIX5  =      1.000000000E+00 /
+CROTA5  =      0.000000000E+00 /
+CTYPE6  = 'RA      '           /Right Ascension in deg.
+CRVAL6  =    8.88783567042E+01 /
+CDELT6  =      1.000000000E+00 /
+CRPIX6  =      1.000000000E+00 /
+CROTA6  =      0.000000000E+00 /
+CTYPE7  = 'DEC     '           /Declination in deg.
+CRVAL7  =    3.98136569444E+01 /
+CDELT7  =      1.000000000E+00 /
+CRPIX7  =      1.000000000E+00 /
+CROTA7  =      0.000000000E+00 /
+GROUPS  =                    T /
+GCOUNT  =                23238 /
+PCOUNT  =                    9 /
+PTYPE1  = 'UU---SIN'
+PSCAL1  =    6.51381590531E-11 /
+PZERO1  =    0.00000000000E+00 /
+PTYPE2  = 'VV---SIN'
+PSCAL2  =    6.51381590531E-11 /
+PZERO2  =    0.00000000000E+00 /
+PTYPE3  = 'WW---SIN'
+PSCAL3  =    6.51381590531E-11 /
+PZERO3  =    0.00000000000E+00 /
+PTYPE4  = 'DATE    '
+PSCAL4  =    1.00000000000E+00 /
+PZERO4  =    2.45213850000E+06 /
+PTYPE5  = 'DATE    '
+PSCAL5  =    1.00000000000E+00 /
+PZERO5  =    0.00000000000E+00 /
+PTYPE6  = 'BASELINE'
+PSCAL6  =    1.00000000000E+00 /
+PZERO6  =    0.00000000000E+00 /
+PTYPE7  = 'INTTIM  '
+PSCAL7  =    1.00000000000E+00 /
+PZERO7  =    0.00000000000E+00 /
+PTYPE8  = 'GATEID  '
+PSCAL8  =    1.00000000000E+00 /
+PZERO8  =    0.00000000000E+00 /
+PTYPE9  = 'CORR-ID '
+PSCAL9  =    1.00000000000E+00 /
+PZERO9  =    0.00000000000E+00 /
+         / Where baseline = 256*ant1 + ant2 + (array#-1)/100
+HDU type: 0
+bitpix: -32
+NAXIS: 7
+NAXIS1: 0
+NAXIS2: 3
+NAXIS3: 1
+NAXIS4: 1
+NAXIS5: 4
+NAXIS6: 1
+NAXIS7: 1
+GCOUNT: 23238
+PCOUNT: 9

@@ -8,20 +8,26 @@ target = 'bk';
 uvname = strcat(target, '.uv');
 pngname = strcat(target, '_dirt_', num2str(ng), '.png');
 
-offset = 3;
+offset = 3 + 9;
 
 arr = importdata(uvname);
 
 u = arr(:, 1);
 v = arr(:, 2);
+
 vis = complex(arr(:, offset + 1), arr(:, offset + 2));
 weight = arr(:, offset + 3);
+
+for offset = 6:3:12
+    vis = vis + complex(arr(:, offset + 1), arr(:, offset + 2));
+    weitht = weight + arr(:, offset + 3);
+end
 
 mu = max(u);
 mv = max(v);
 maxuv = max(mu, mv) * 1.00001;
 
-maxuv = maxuv * 8;
+maxuv = maxuv * 4.2;
 
 fsize = 17;
 figure(1);
@@ -54,8 +60,7 @@ beamarr = complex(beamarr_r, beamarr_c);
 %idu = floor((u - uleft) / du) + 1;
 %idv = floor((v - vleft) / dv) + 1;
 
-for i=1:length(u)
-    
+for i=1:length(u)    
     idu = floor(u(i) / du);
     if(idu < 0)
         idu = idu + ng;
@@ -71,6 +76,14 @@ for i=1:length(u)
     visarr(idv, idu) = visarr(idv, idu) + vis(i);
     beamarr(idv, idu) = 1.0;
 end
+
+% for i = 1:length(u)
+%     
+%     idu = floor(u(i) / du)
+%     wu = (u(i) - idu * du) / du;
+%     idv = floor(v(i) / )
+% 
+% end
 
 %figure(2);
 %imagesc(abs(visarr));
@@ -110,7 +123,7 @@ beam = beam / bmax;
 
 %beam(by - 5: by + 5, bx - 5: bx + 5)
 
-gain = 0.01;
+gain = 0.02;
 
 niter = 2000;
 flux = zeros(niter);
@@ -157,7 +170,7 @@ for i = 1:niter
     end
 end
     
-bw = 0.26;
+bw = 0.42;
 pw = 0.1;
 
 img = zeros(ng, ng);
@@ -193,7 +206,10 @@ colormap(gray);
 colorbar();
 
 figure(8);
-contour(img);
+v = [0.005 0.01 0.02 0.03 0.05 0.1 0.2];
+[C, h] = contour(img, v);
+%clabel(C, h, 'FontSize', 12);
+colorbar();
 axis square;
 
 end

@@ -33,7 +33,7 @@ int main(int argc, char **argv){
     for(i = 1; i <= nkeys; ++i){
         fits_read_record(fptr, i, card, &status);
         if(strstr(card, "HISTORY") != NULL) break;
-//        printf("%s\n", card);
+        printf("%s\n", card);
     }
 
     int hdutype;
@@ -80,13 +80,22 @@ int main(int argc, char **argv){
     cp_4r4((unsigned char *)buf_l, (unsigned char *)buf, ncols * gcount);
     free(buf);
 
+    int ifcount = naxis[5]; 
+    int offset;
+
     float *pflt = buf_l;
     for(i = 0; i < gcount; ++i){
 //        fits_read_grppar_flt(fptr, 0, 1 + i, pcount, buf, &status);
 //        fits_read_img(fptr, TFLOAT, 1 + i * ncols, pcount + nelem, &nulval, buf, &anynul, &status);
-        fprintf(fp, "%14.5e%14.5e%14.5e%14.5e%14.5e%14.5e\n", 
-                pflt[0], pflt[1], pflt[2], 
-                pflt[pcount + 0], pflt[pcount + 1], pflt[pcount + 2]);
+//        fprintf(fp, "%14.5e%14.5e%14.5e%14.5e%14.5e%14.5e\n", 
+//                pflt[0], pflt[1], pflt[2], 
+//                pflt[pcount + 0], pflt[pcount + 1], pflt[pcount + 2]);
+        fprintf(fp, "%14.5e%14.5e%14.5e", pflt[0], pflt[1], pflt[2]);
+        for(offset = pcount; offset < pcount + 3 * ifcount; offset += 3){
+            fprintf(fp, "%14.5e%14.5e%14.5e", 
+                pflt[offset + 0], pflt[offset + 1], pflt[offset + 2]);
+        }
+        fprintf(fp, "\n");
         pflt += ncols;
     }
     fclose(fp);
