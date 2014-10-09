@@ -1,5 +1,6 @@
 *.fits
 *.dat
+*.bin
 *.png
 *.eps
 *.uv
