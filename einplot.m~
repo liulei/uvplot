@@ -10,11 +10,10 @@ ng = 512;
 % res_mas = 0.1; % in mas
 % res_rad = res_mas * 1E-3 / 3600. / 180. * pi;
 
-umax = 2.0 * pi;
+umax = 4.0 * pi;
 vmax = umax;
 
-ngh = ng / 2;
-uinc = umax / ngh;
+uinc = umax / ng;
 vinc = uinc;
 ulimit = uinc * ng / 4;
 vlimit = ulimit;
@@ -104,8 +103,8 @@ end
 dirt_img = ifft2(visarr);
 dirt_beam = ifft2(beamarr);
 
-dirt_img = fftshift(dirt_img);
-dirt_beam = fftshift(dirt_beam);
+%dirt_img = fftshift(dirt_img);
+%dirt_beam = fftshift(dirt_beam);
 
 dirt_img = flipud(dirt_img);
 dirt_beam = flipud(dirt_beam);

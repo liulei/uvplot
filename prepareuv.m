@@ -16,7 +16,7 @@ colormap(gray);
 colorbar();
 
 img = fftshift(img);
-uvarr = fft2(img) / ng;
+uvarr = fft2(img);
 
 arr = importdata('cont_sim4.vis');
 u = arr(:, 2);
@@ -65,7 +65,7 @@ img_dirt = ifft2(visarr);
 img_dirt = fftshift(img_dirt);
 img_dirt = real(img_dirt);
 %img_dirt = img_dirt(ng4+1:ng4*3, ng4+1:ng4*3);
-figure(3);
+figure(401);
 imagesc(flipud(img_dirt(ng4+1:ng4*3, ng4+1:ng4*3)));
 %imagesc(flipud(img_dirt));
 axis image;
@@ -75,7 +75,7 @@ colorbar();
 beam_dirt = ifft2(beamarr);
 beam_dirt = fftshift(beam_dirt);
 beam_dirt = real(beam_dirt);
-figure(4)
+figure(501)
 imagesc(flipud(beam_dirt(ng4+1:ng4*3, ng4+1:ng4*3)));
 %imagesc(flipud(img_dirt));
 axis image;

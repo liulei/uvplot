@@ -1,7 +1,10 @@
 function einreconstruct
 %
 %bin_name = 'ein_0.05_10000.bin';
-bin_name = 'ein_0.01_50000.bin';
+%bin_name = 'ein_0.01_50000.bin';
+%bin_name = 'ein_0.002_100000.bin';
+%bin_name = 'ein_0.002_200000.bin';
+bin_name = 'ein_0.001_200000.bin';
 
 fid = fopen(bin_name, 'r');
 ng = fread(fid, [1,1], 'int')
@@ -17,9 +20,9 @@ ng4 = ng / 4;
 
 img = zeros(ng, ng);
 
-nb = 12;
-gaux = 7;
-gauy = 7;
+nb = 6;
+gaux = 2;
+gauy = 2;
 pixw = 1;
 patch = zeros(2*nb+1, 2*nb+1);
 
@@ -51,7 +54,7 @@ end
 
 img = img + res;
 
-figure(10);
+figure(101);
 imagesc(img(ng4+1:ng4*3, ng4+1:ng4*3));
 axis image;
 colormap(gray);
