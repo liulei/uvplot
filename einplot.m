@@ -19,7 +19,8 @@ vinc = uinc;
 ulimit = uinc * ng / 4;
 vlimit = ulimit;
 
-target = 'ein_center';
+%target = 'ein_center';
+target = 'ein';
 uvname = strcat(target, '.uv');
 pngname = strcat(target, '_dirt_', num2str(ng), '.png');
 
@@ -143,9 +144,9 @@ plot(yarr, beam(yarr, bx), 'b-');
 
 %beam(by - 5: by + 5, bx - 5: bx + 5)
 
-gain = 0.001;
+gain = 0.01;
 
-niter = 200000;
+niter = 10000;
 flux = zeros(1, niter);
 ary = zeros(1, niter, 'int16');
 arx = zeros(1, niter, 'int16');

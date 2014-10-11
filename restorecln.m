@@ -1,4 +1,4 @@
-function reconstruct()
+function restorecln()
 %
 %bin_name = 'ein_0.05_10000.bin';
 %bin_name = 'ein_0.01_50000.bin';
@@ -8,7 +8,7 @@ function reconstruct()
 %cln_name = 'ein_0.01_10000.bin';
 cln_name = 'bk_0.001_20000.cln'
 
-fid = fopen(bin_name, 'r');
+fid = fopen(cln_name, 'r');
 ng = fread(fid, [1,1], 'int')
 niter = fread(fid, [1,1], 'int')
 gain = fread(fid, [1,1], 'double')
@@ -36,8 +36,8 @@ for j = -nb:nb
     for i = -nb:nb
         rx2 = (i * pixw)^2;
         ry2 = (j * pixw)^2;
-        tmpx = exp(-0.5 * rx2 / gaux2);
-        tmpy = exp(-0.5 * ry2 / gauy2);
+        tmpx = exp(-2 * rx2 / gaux2);
+        tmpy = exp(-2 * ry2 / gauy2);
         patch(nb1 + j, nb1 + i) = tmpx * tmpy;
     end
 end
@@ -54,7 +54,7 @@ for i = 1:length(flux)
     end
 end
 
-img = img + res;
+%img = img + res;
 
 figure(101);
 imagesc(flipud(img(ng4+1:ng4*3, ng4+1:ng4*3)));
