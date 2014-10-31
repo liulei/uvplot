@@ -17,7 +17,6 @@ vlimit = ulimit;
 fprintf('Required uv: %f, res: %f\n', ulimit, res_mas);
 
 src = 'bk';
-%src = '16B';
 uvname = strcat(src, '.uv');
 %pngname = strcat(target, '_dirt_', num2str(ng), '.png');
 
@@ -44,6 +43,8 @@ maxuv = sqrt(maxuv);
 minres = 1.0 / maxuv * 180. / pi * 3600. * 1000.;
 fprintf('Provided max uv: %f, min res: %f\n', maxuv, minres);
 
+%maxuv = maxuv * 4.2;
+
 fsize = 17;
 figure(1);
 h = gca;
@@ -56,6 +57,9 @@ axis square;
 xlabel('u');
 ylabel('v');
 
+
+%uleft = -maxuv ;
+%vleft = -maxuv ;
 uleft = -ulimit * 2.0;
 vleft = -vlimit * 2.0;
 uright = -uleft;
@@ -71,34 +75,46 @@ beamarr_r = zeros(ng, ng);
 beamarr_c = zeros(ng, ng);
 beamarr = complex(beamarr_r, beamarr_c);
 
-%idu = floor((u - uleft) / du) + 1;
-%idv = floor((v - vleft) / dv) + 1;
 
-nmeas = length(u);
-for i=1:nmeas   
-    idu = floor(u(i) / du + 0.5);
-    if(idu < 0)
-        idu = idu + ng;
-    end
-    idu = idu + 1;
+NGCF = 301;
+nmask = 2;
+hwhm = 0.7;
+tgtocg = (NGCF - 1.) / (nmask +  0.5); 
+cghwhm = tgtocg * hwhm;
+recvar = log(2.0) / cghwhm / cghwhm;
+for i = 0:NGCF-1
+    convfn(i + 1) = exp(-recvar * i * i);
+end
+
+for i = 1:length(u)
+    ufrc = u(i) / uinc;
+    vfrc = v(i) / vinc;
+    upix = floor(ufrc + 0.5);
+    vpix = floor(vfrc + 0.5);
     
-    idv = floor(v(i) / dv + 0.5);
-    if(idv < 0)
-        idv = idv + ng;
-    end
-    idv = idv + 1;
+    for 
     
-    visarr(idv, idu) = visarr(idv, idu) + vis(i);
-    beamarr(idv, idu) = 1.0;
 end
 
 % for i = 1:length(u)
-%    idu = floor(u(i) / du) wu = (u(i) - idu * du) / du; idv = floor(v(i)/ )
+%     
+%     idu = floor(u(i) / du)
+%     wu = (u(i) - idu * du) / du;
+%     idv = floor(v(i) / )
+% 
 % end
-%figure(2); imagesc(abs(visarr)); colormap(jet); colorbar();
-%figure(3); imagesc(abs(beamarr)); colormap(jet); colorbar();
 
-dirt_img = ifft2(visarr) * ng * ng / nmeas;
+%figure(2);
+%imagesc(abs(visarr));
+%colormap(jet);
+%colorbar();
+
+%figure(3);
+%imagesc(abs(beamarr));
+%colormap(jet);
+%colorbar();
+
+dirt_img = ifft2(visarr);
 dirt_beam = ifft2(beamarr);
 
 dirt_img = fftshift(dirt_img);
@@ -122,16 +138,12 @@ axis image;
 colormap(gray);
 colorbar();
 
-
 res = real(dirt_img);
 beam = real(dirt_beam);
-[imgmin, ~, ~] = arr_min(res);
 [imgmax, ~, ~] = arr_max(res);
 [bmax, by, bx] = arr_max(beam);
+fprintf('imgmax / bmax: %f\n', imgmax/bmax);
 beam = beam / bmax;
-
-fprintf('imgmax: %f, imgmin: %f, imgmax/imgmin: %f\n', ...
-    imgmax, imgmin, imgmax / imgmin);
 
 nb = 15;
 xarr = bx - nb: bx + nb;
@@ -141,10 +153,9 @@ plot(xarr, beam(by, xarr), 'r-');
 hold on;
 plot(yarr, beam(yarr, bx), 'b-');
 
+return;
 
 %beam(by - 5: by + 5, bx - 5: bx + 5)
-
-return;
 
 gain = 0.001;
 

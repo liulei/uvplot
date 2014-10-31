@@ -1,9 +1,14 @@
-function showcontour(src, fignum)
+function showcontour(src, fignum, is_flipud)
 %
 %src = 'bk'
 
 name_fits = strcat(src, '.fits');
 img = fitsread(name_fits);
+
+
+if is_flipud ~= 0
+    img = flipud(img);
+end
 
 [ny, nx] = size(img);
 

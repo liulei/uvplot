@@ -1,4 +1,4 @@
-function clean()
+function uvcount()
 % plot (l,m) figure
 %
 
@@ -10,7 +10,10 @@ freq = 1.0;
 res_mas = 0.1; % in mas
 
 res_rad = res_mas * 1E-3 / 3600. / 180. * pi;
-uinc = 1. / (res_rad * ng);
+umax = 1.0 / res_rad / 2.0;
+%umax = pi;
+
+uinc = umax / ng * 2;
 vinc = uinc;
 ulimit = uinc * ng / 4;
 vlimit = ulimit;
@@ -18,6 +21,7 @@ fprintf('Required uv: %f, res: %f\n', ulimit, res_mas);
 
 src = 'bk';
 %src = '16B';
+%src = 'ein';
 uvname = strcat(src, '.uv');
 %pngname = strcat(target, '_dirt_', num2str(ng), '.png');
 
@@ -89,22 +93,20 @@ for i=1:nmeas
     idv = idv + 1;
     
     visarr(idv, idu) = visarr(idv, idu) + vis(i);
-    beamarr(idv, idu) = 1.0;
+    beamarr(idv, idu) = beamarr(idv, idu) + 1.0;
 end
 
-% for i = 1:length(u)
-%    idu = floor(u(i) / du) wu = (u(i) - idu * du) / du; idv = floor(v(i)/ )
-% end
-%figure(2); imagesc(abs(visarr)); colormap(jet); colorbar();
-%figure(3); imagesc(abs(beamarr)); colormap(jet); colorbar();
+figure(2);
+imagesc(abs(fftshift(beamarr)))
+colormap(jet);
+colorbar();
 
 dirt_img = ifft2(visarr) * ng * ng / nmeas;
-dirt_beam = ifft2(beamarr);
-
 dirt_img = fftshift(dirt_img);
-dirt_beam = fftshift(dirt_beam);
-
 dirt_img = flipud(dirt_img);
+
+dirt_beam = ifft2(beamarr);
+dirt_beam = fftshift(dirt_beam);
 dirt_beam = flipud(dirt_beam);
 
 ng4 = ng / 4;
@@ -112,14 +114,14 @@ figure(4);
 %imagesc(real(flipud(dirt_img)));
 imagesc(real(dirt_img(ng4 + 1: ng4 * 3, ng4 + 1: ng4 * 3)));
 axis image;
-colormap(gray);
+colormap(jet);
 colorbar();
 
 figure(5);
 imagesc(real(dirt_beam(ng4 + 1: ng4 * 3, ng4 + 1: ng4 * 3)));
 %imagesc(real(flipud(dirt_beam)));
 axis image;
-colormap(gray);
+colormap(jet);
 colorbar();
 
 
@@ -133,80 +135,7 @@ beam = beam / bmax;
 fprintf('imgmax: %f, imgmin: %f, imgmax/imgmin: %f\n', ...
     imgmax, imgmin, imgmax / imgmin);
 
-nb = 15;
-xarr = bx - nb: bx + nb;
-yarr = by - nb: by + nb;
-figure(100);
-plot(xarr, beam(by, xarr), 'r-');
-hold on;
-plot(yarr, beam(yarr, bx), 'b-');
-
-
-%beam(by - 5: by + 5, bx - 5: bx + 5)
-
 return;
-
-gain = 0.001;
-
-niter = 20000;
-flux = zeros(1, niter);
-ary = zeros(1, niter, 'int16');
-arx = zeros(1, niter, 'int16');
-
-[maxflux, ry, rx] = arr_max(res);
-[minflux, ry, rx] = arr_min(res);
-fprintf('Before clean: %.4f --- %.4f\n', minflux, maxflux);
-
-sum = 0.0;
-for i = 1:niter
-    [maxflux, ry, rx] = arr_max(res);
-    %[minval, row, col] = arr_min(dirt_img)
-    
-    rmv = gain * maxflux * beam;
-    rby = ry - by;
-    rbx = rx - bx;
-    
-    for bj = 1:ng
-        for bi = 1:ng
-             rj = bj + rby;
-             ri = bi + rbx;
-             if rj > 0 && rj <= ng && ri > 0 && ri <= ng
-                 res(rj, ri) = res(rj, ri) - rmv(bj, bi);
-             end %if
-        end % bi
-    end % bj
-    
-    flux(i) = maxflux * gain;
-    ary(i) = ry;
-    arx(i) = rx;
-    
-    sum = sum + flux(i);
-    if mod(i, 100) == 0
-        [maxflux, ry, rx] = arr_max(res);
-        [minflux, ry, rx] = arr_min(res);
-        fprintf('Iteration %5d, flux cleaned: %.4f, %.4f --- %.4f\n', i, sum, minflux, maxflux);
-    end
-end
-
-figure(6);
-imagesc(res(ng4+1:ng4*3, ng4+1:ng4*3));
-axis image;
-colormap(gray);
-colorbar();
-
-img = zeros(ng, ng);
-
-bin_name = strcat(src, '_', num2str(gain), '_', num2str(niter), '.cln');
-fid = fopen(bin_name, 'w');
-fwrite(fid, ng, 'int');
-fwrite(fid, niter, 'int');
-fwrite(fid, gain, 'double');
-fwrite(fid, flux, 'double');
-fwrite(fid, arx, 'int16');
-fwrite(fid, ary, 'int16');
-fwrite(fid, res, 'double');
-fclose(fid);
-
 end
 
 function [maxval, row, col] = arr_max(arr)
@@ -218,4 +147,3 @@ function [minval, row, col] = arr_min(arr)
     [minval, minloc] = min(arr(:));
     [row, col] = ind2sub(size(arr), minloc);
 end
-

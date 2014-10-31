@@ -54,7 +54,7 @@ for i = 1:length(flux)
     end
 end
 
-%img = img + res;
+img = img + res;
 
 figure(101);
 imagesc(flipud(img(ng4+1:ng4*3, ng4+1:ng4*3)));

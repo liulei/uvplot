@@ -16,7 +16,7 @@ colormap(gray);
 colorbar();
 
 img = fftshift(img);
-uvarr = fft2(img);
+uvarr = fft2(img) / ng;
 
 arr = importdata('cont_sim4.vis');
 u = arr(:, 2);
@@ -30,7 +30,7 @@ len = floor(length(u) * 0.2);
 vis = complex(zeros(1,len), zeros(1, len));
 visarr = complex(zeros(ng, ng), zeros(ng, ng));
 beamarr = complex(zeros(ng, ng), zeros(ng, ng));
-fid = fopen('ein_center.uv', 'w');
+fid = fopen('ein_matlab.uv', 'w');
 for i=1:len
     idu = floor(u(i) / uinc + 0.5) + 1;
     if idu < 1
